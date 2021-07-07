@@ -1,0 +1,30 @@
+repositories {
+    maven {
+        url "https://artifactory.appodeal.com/appodeal"
+    }
+}
+dependencies {
+    // Appodeal
+    implementation ('com.appodeal.ads:sdk:2.10.1.+') {
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'appodeal'
+        exclude group: 'com.appodeal.ads.sdk.networks', module: 'nast'
+    }
+    implementation 'com.appodeal.ads.sdk.networks:chartboost:2.10.1.6'
+    implementation 'com.appodeal.ads.sdk.networks:inmobi:2.10.1.7'
+    implementation 'com.appodeal.ads.sdk.networks:mopub:2.10.1.4'
+    implementation 'com.appodeal.ads.sdk.networks:tapjoy:2.10.1.7'
+    // Consent manager
+    implementation 'com.explorestack:consent:1.0.4'
+    implementation 'com.google.android.gms:play-services-ads-identifier:15.0.0'
+}
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
+}
