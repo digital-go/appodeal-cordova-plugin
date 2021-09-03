@@ -5,14 +5,6 @@ var exec = require('cordova/exec');
 
 var SERVICE = 'Appodeal';
 
-/* require('cordova/channel').onCordovaReady.subscribe(function() {
-    exec(onNotification, null, SERVICE, 'notificationChannel', [])
-})
-
-function onNotification(payload) {
-    cordova.fireDocumentEvent(payload._eventType, payload)
-} */
-
 Appodeal.INTERSTITIAL = 3;
 Appodeal.BANNER = 4;
 Appodeal.BANNER_BOTTOM = 8;

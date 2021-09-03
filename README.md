@@ -70,8 +70,8 @@ Appodeal.show(Appodeal.REWARDED_VIDEO, function(result){
 ```
 
 appodeal SDK versions:<br>
-iOS: 2.10.0.1-Beta<br>
-android: 2.10.1
+iOS: 2.10.2<br>
+android: 2.10.2
 
 stack consent SDK versions:<br>
 iOS: 1.1.1<br>

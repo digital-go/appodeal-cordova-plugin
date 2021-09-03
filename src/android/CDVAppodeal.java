@@ -125,6 +125,7 @@ public class CDVAppodeal extends CordovaPlugin {
                     if("true".equals(Settings.System.getString(cordova.getActivity().getContentResolver(), "firebase.test.lab"))) {
                         Appodeal.setTesting(true);
                     }
+                    Appodeal.disableLocationPermissionCheck();
                     log("Initializing SDK");
                     Appodeal.initialize(cordova.getActivity(), appKey, getAdType(adType), consentValue);
                     isInitialized = true;
@@ -140,6 +141,7 @@ public class CDVAppodeal extends CordovaPlugin {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Appodeal.disableLocationPermissionCheck();
                     ConsentManager consentManager = ConsentManager.getInstance(cordova.getActivity());
                     // Requesting Consent info update
                     consentManager.requestConsentInfoUpdate(
