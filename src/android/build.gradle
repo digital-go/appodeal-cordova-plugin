@@ -5,7 +5,7 @@ repositories {
 }
 dependencies {
     // Appodeal
-    implementation 'com.appodeal.ads:sdk:2.10.2.+'
+    implementation 'com.appodeal.ads:sdk:2.10.3.+'
 
     // Consent manager
     implementation 'com.explorestack:consent:1.0.4'

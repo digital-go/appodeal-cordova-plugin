@@ -584,10 +584,6 @@
                 </dict>
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
-                    <string>f7s53z58qe.skadnetwork</string>
-                </dict>
-                <dict>
-                    <key>SKAdNetworkIdentifier</key>
                     <string>238da6jt44.skadnetwork</string>
                 </dict>
                 <dict>
@@ -596,9 +592,17 @@
                 </dict>
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
+                    <string>f7s53z58qe.skadnetwork</string>
+                </dict>
+                <dict>
+                    <key>SKAdNetworkIdentifier</key>
                     <string>gta8lk7p23.skadnetwork</string>
                 </dict>
             </array>
+        </config-file>
+
+        <config-file parent="MyTargetSDKAutoInitMode" target="*-Info.plist">
+            <false/>
         </config-file>
 
         <podspec>
@@ -606,26 +610,19 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="StackConsentManager" spec="~> 1.1.1" />
-                <pod name="APDAdColonyAdapter" spec="2.10.2.1" />
-                <pod name="APDAmazonAdsAdapter" spec="2.10.2.1" />
-                <pod name="APDAppLovinAdapter" spec="2.10.2.1" />
-                <pod name="APDBidMachineAdapter" spec="2.10.2.2" />
-                <pod name="APDChartboostAdapter" spec="2.10.2.1" />
-                <pod name="APDFacebookAudienceAdapter" spec="2.10.2.1" />
-                <pod name="APDGoogleAdMobAdapter" spec="2.10.2.2" />
-                <pod name="APDInMobiAdapter" spec="2.10.2.1" />
-                <pod name="APDIronSourceAdapter" spec="2.10.2.2" />
-                <pod name="APDMintegralAdapter" spec="2.10.2.1" />
-                <pod name="APDMyTargetAdapter" spec="2.10.2.1" />
-                <pod name="APDOguryAdapter" spec="2.10.2.1" />
-                <pod name="APDSmaatoAdapter" spec="2.10.2.1" />
-                <pod name="APDStartAppAdapter" spec="2.10.2.2" />
-                <pod name="APDTapjoyAdapter" spec="2.10.2.1" />
-                <pod name="APDTwitterMoPubAdapter" spec="2.10.2.1" />
-                <pod name="APDUnityAdapter" spec="2.10.2.1" />
-                <pod name="APDVungleAdapter" spec="2.10.2.2" />
-                <pod name="APDYandexAdapter" spec="2.10.2.2" />
+                <pod name="StackConsentManager" spec="~> 1.1.2" />
+                <pod name="APDAdColonyAdapter" spec="2.10.3.1" />
+                <pod name="APDAmazonAdsAdapter" spec="2.10.3.1" />
+                <pod name="APDAppLovinAdapter" spec="2.10.3.1" />
+                <pod name="APDBidMachineAdapter" spec="2.10.3.1" />
+                <pod name="APDFacebookAudienceAdapter" spec="2.10.3.2" />
+                <pod name="APDGoogleAdMobAdapter" spec="2.10.3.2" />
+                <pod name="APDIronSourceAdapter" spec="2.10.3.1" />
+                <pod name="APDMyTargetAdapter" spec="2.10.3.2" />
+                <pod name="APDOguryAdapter" spec="2.10.3.1" />
+                <pod name="APDUnityAdapter" spec="2.10.3.1" />
+                <pod name="APDVungleAdapter" spec="2.10.3.1" />
+                <pod name="APDYandexAdapter" spec="2.10.3.2" />
             </pods>
         </podspec>
 
