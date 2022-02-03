@@ -5,10 +5,10 @@ repositories {
 }
 dependencies {
     // Appodeal
-    implementation 'com.appodeal.ads:sdk:2.10.3.+'
+    implementation 'com.appodeal.ads:sdk:2.11.0.+'
 
     // Consent manager
-    implementation 'com.explorestack:consent:1.0.4'
+    implementation 'com.explorestack:consent:1.0.5'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
 }
 
@@ -16,9 +16,5 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    dexOptions {
-        javaMaxHeapSize "2g"
     }
 }

@@ -195,18 +195,6 @@ exports.defineAutoTests = function() {
         })
     })
 
-    describe('setSegmentFilter', function() {
-        var Appodeal = window.plugins.Appodeal
-
-        it('should be defined', function() {
-            expect(Appodeal.setSegmentFilter).toBeDefined()
-        })
-
-        it('should be a function', function() {
-            expect(typeof Appodeal.setSegmentFilter).toBe('function')
-        })
-    })
-
     describe('hasStatusBarPlugin', function() {
         var Appodeal = window.plugins.Appodeal
 

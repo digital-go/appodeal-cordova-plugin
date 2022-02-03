@@ -20,7 +20,7 @@ Appodeal.setBannerOverLap(true);
 
 Appodeal.manageConsent(
     "Appodeal App Key",
-    Appodeal.BANNER | Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO,
+    Appodeal.BANNER | Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.NATIVE,
     hasConsent,
     callback
 );
@@ -45,6 +45,9 @@ Appodeal.setRewardedVideoCallbacks(function(container){
          console.log('rewarded video finished and fully watched.');
     }
 });
+Appodeal.setNativeCallbacks(function(container){
+    console.log('nativeAd callback event triggered:', container.event);
+});
 ```
 
 ## show the ads:
@@ -67,12 +70,27 @@ Appodeal.show(Appodeal.INTERSTITIAL, function(result){
 Appodeal.show(Appodeal.REWARDED_VIDEO, function(result){
      console.log('REWARDED_VIDEO ad shown', result);
 });
+
+Appodeal.show(Appodeal.NATIVE, function(result){
+     console.log('NATIVE ad shown', result);
+});
 ```
+
+## notes about Native Ad:
+
+On Android, the Native Ad is created on a dedicated View object using the specific Appodeal template `NativeAdViewNewsFeed`.<br>
+This View is drawn separated from the Cordova webview (as all other ad types), but can be positioned via the `setNativeAdPosition()` method (values for top/left/bottom/right must be provided, along with a 'tab height' value to define height boundaries).<br>
+From inside the cordova/ionic app, the `setNativeAdPosition()` method can be hooked to the `onScroll` event of the desired content area, to make the NativeAd View get repositioned following scroll events.<br>
+The final result is not perfect (also requires special controls from the javascript side), but works and allows Ionic/Cordova apps to show NativeAds from Appodeal.
+
+TODO: iOS implementation.
+
+<hr />
 
 appodeal SDK versions:<br>
 iOS: 2.10.3 (must use XCode 13+)<br>
-android: 2.10.3
+android: 2.11.0
 
 stack consent SDK versions:<br>
 iOS: 1.1.2<br>
-android: 1.0.4
+android: 1.0.5

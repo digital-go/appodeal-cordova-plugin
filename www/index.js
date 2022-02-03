@@ -11,6 +11,7 @@ Appodeal.BANNER_BOTTOM = 8;
 Appodeal.BANNER_TOP = 16;
 Appodeal.REWARDED_VIDEO = 128;
 Appodeal.NON_SKIPPABLE_VIDEO = 256;
+Appodeal.NATIVE = 512;
 
 Appodeal.BANNER_X_SMART = 0;
 Appodeal.BANNER_X_CENTER = 1;
@@ -168,10 +169,6 @@ Appodeal.getRewardParametersForPlacement = function(placement, callback) {
     exec(callback, null, SERVICE, "getRewardParametersForPlacement", [placement]);
 };
 
-Appodeal.setSegmentFilter = function(name, value) {
-    exec(null, null, SERVICE, "setSegmentFilter", [name, value]);
-};
-
 Appodeal.setExtraData = function(name, value) {
     exec(null, null, SERVICE, "setExtraData", [name, value]);
 };
@@ -204,14 +201,34 @@ Appodeal.setInterstitialCallbacks = function(callback) {
     exec(callback, null, SERVICE, "setInterstitialCallbacks", [])
 };
 
-Appodeal.setNonSkippableVideoCallbacks = function(callbacks) {
-    exec(callbacks, null, SERVICE, "setNonSkippableVideoCallbacks", []);
+Appodeal.setNonSkippableVideoCallbacks = function(callback) {
+    exec(callback, null, SERVICE, "setNonSkippableVideoCallbacks", []);
 };
 
-Appodeal.setRewardedVideoCallbacks = function(callbacks) {
-    exec(callbacks, null, SERVICE, "setRewardedVideoCallbacks", []);
+Appodeal.setRewardedVideoCallbacks = function(callback) {
+    exec(callback, null, SERVICE, "setRewardedVideoCallbacks", []);
 };
 
-Appodeal.setBannerCallbacks = function(callbacks) {
-    exec(callbacks, null, SERVICE, "setBannerCallbacks", []);
+Appodeal.setBannerCallbacks = function(callback) {
+    exec(callback, null, SERVICE, "setBannerCallbacks", []);
 };
+
+Appodeal.setNativeCallbacks = function(callback) {
+    exec(callback, null, SERVICE, "setNativeCallbacks", [])
+};
+
+Appodeal.getNativeAds = function(callback) {
+    exec(callback, null, SERVICE, "getNativeAds", [])
+}
+
+Appodeal.setNativeAdPosition = function(x, y, w, h, tabH, callback) {
+    exec(callback, null, SERVICE, "setNativeAdPosition", [x, y, w, h, tabH])
+}
+
+Appodeal.hideNativeAd = function(callback) {
+    exec(callback, null, SERVICE, "hideNativeAd", [])
+}
+
+Appodeal.revealHiddenNativeAd = function(callback) {
+    exec(callback, null, SERVICE, "revealHiddenNativeAd", [])
+}

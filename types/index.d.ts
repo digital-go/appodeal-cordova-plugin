@@ -41,7 +41,6 @@ declare class Appodeal {
     canShowWithPlacement: (adType: any, placement: any, callback: any) => void
     getRewardParameters: (callback: any) => void
     getRewardParametersForPlacement: (placement: any, callback: any) => void
-    setSegmentFilter: (name: any, value: any) => void
     setExtraData: (name: any, value: any) => void
     getPredictedEcpm: (adType: any, callback: any) => void
     setAge: (age: any) => void
@@ -53,4 +52,9 @@ declare class Appodeal {
     setNonSkippableVideoCallbacks: (callbacks: any) => void
     setRewardedVideoCallbacks: (callbacks: any) => void
     setBannerCallbacks: (callbacks: any) => void
+    setNativeCallbacks: (callback: any) => void
+    getNativeAds: (callback: any) => void
+    setNativeAdPosition: (x: any, y: any, w: any, h: any, tabH: any, callback: any) => void
+    hideNativeAd: (callback: any) => void
+    revealHiddenNativeAd: (callback: any) => void
 }
