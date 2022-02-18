@@ -1,12 +1,17 @@
 #import <Cordova/CDV.h>
 #import <Appodeal/Appodeal.h>
+#import "NativeAdView.h"
 
-@interface CDVAppodeal : CDVPlugin <AppodealBannerDelegate, APDBannerViewDelegate, AppodealInterstitialDelegate, AppodealRewardedVideoDelegate, AppodealNonSkippableVideoDelegate>
+@interface CDVAppodeal : CDVPlugin <AppodealBannerDelegate, APDBannerViewDelegate, AppodealInterstitialDelegate, AppodealRewardedVideoDelegate, AppodealNonSkippableVideoDelegate, APDNativeAdQueueDelegate, APDNativeAdPresentationDelegate>
 
-@property (nonatomic, copy) NSString* interstitialCallbackID;
-@property (nonatomic, copy) NSString* bannerCallbackID;
-@property (nonatomic, copy) NSString* nonSkippbaleCallbackID;
-@property (nonatomic, copy) NSString* rewardedCallbackID;
+@property (nonatomic, copy) NSString *interstitialCallbackID;
+@property (nonatomic, copy) NSString *bannerCallbackID;
+@property (nonatomic, copy) NSString *nonSkippbaleCallbackID;
+@property (nonatomic, copy) NSString *rewardedCallbackID;
+@property (nonatomic, copy) NSString *nativeCallbackID;
+
+@property (nonatomic, strong) APDNativeAdQueue *nativeAdQueue;
+@property (nonatomic, strong) APDNativeAd *nativeAd;
 
 - (void) initialize:(CDVInvokedUrlCommand*)command;
 - (void) manageConsent:(CDVInvokedUrlCommand*)command;
@@ -38,6 +43,9 @@
 - (void) getVersion:(CDVInvokedUrlCommand*)command;
 - (void) setPluginVersion:(CDVInvokedUrlCommand*)command;
 - (void) isInitialized:(CDVInvokedUrlCommand*)command;
+- (void) setNativeAdPosition:(CDVInvokedUrlCommand*)command;
+- (void) hideNativeAd:(CDVInvokedUrlCommand*)command;
+- (void) revealHiddenNativeAd:(CDVInvokedUrlCommand*)command;
 
 - (void) canShow:(CDVInvokedUrlCommand*)command;
 - (void) canShowWithPlacement:(CDVInvokedUrlCommand*)command;
@@ -58,5 +66,6 @@
 - (void) setBannerCallbacks:(CDVInvokedUrlCommand*)command;
 - (void) setRewardedVideoCallbacks:(CDVInvokedUrlCommand*)command;
 - (void) setNonSkippableVideoCallbacks:(CDVInvokedUrlCommand*)command;
+- (void) setNativeCallbacks:(CDVInvokedUrlCommand*)command;
 
 @end

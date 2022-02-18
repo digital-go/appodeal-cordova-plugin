@@ -77,20 +77,12 @@
             <string>Advertising</string>
         </config-file>
 
-        <config-file parent="NSBluetoothPeripheralUsageDescription" target="*-Info.plist">
-            <string>Advertising</string>
-        </config-file>
-
         <config-file parent="NSLocationWhenInUseUsageDescription" target="*-Info.plist">
             <string>Advertising</string>
         </config-file>
 
         <config-file parent="NSPhotoLibraryUsageDescription" target="*-Info.plist">
             <string>Advertising</string>
-        </config-file>
-
-        <config-file parent="NSLocationAlwaysUsageDescription" target="*-Info.plist">
-            <string>This app needs your location for analytics and advertising purposes</string>
         </config-file>
 
         <config-file parent="GADApplicationIdentifier" target="*-Info.plist">
@@ -581,7 +573,7 @@
                 </dict>
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
-                    <string>238da6jt44.skadnetwork</string>
+                    <string>a2p9lx4jpn.skadnetwork</string>
                 </dict>
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
@@ -590,6 +582,10 @@
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
                     <string>f7s53z58qe.skadnetwork</string>
+                </dict>
+                <dict>
+                    <key>SKAdNetworkIdentifier</key>
+                    <string>238da6jt44.skadnetwork</string>
                 </dict>
                 <dict>
                     <key>SKAdNetworkIdentifier</key>
@@ -608,22 +604,26 @@
             </config>
             <pods use-frameworks="true">
                 <pod name="StackConsentManager" spec="~> 1.1.2" />
-                <pod name="APDAdColonyAdapter" spec="2.10.3.1" />
-                <pod name="APDAmazonAdsAdapter" spec="2.10.3.1" />
-                <pod name="APDAppLovinAdapter" spec="2.10.3.1" />
-                <pod name="APDBidMachineAdapter" spec="2.10.3.1" />
-                <pod name="APDFacebookAudienceAdapter" spec="2.10.3.2" />
-                <pod name="APDGoogleAdMobAdapter" spec="2.10.3.2" />
-                <pod name="APDIronSourceAdapter" spec="2.10.3.1" />
-                <pod name="APDMyTargetAdapter" spec="2.10.3.2" />
-                <pod name="APDOguryAdapter" spec="2.10.3.1" />
-                <pod name="APDUnityAdapter" spec="2.10.3.1" />
-                <pod name="APDVungleAdapter" spec="2.10.3.1" />
-                <pod name="APDYandexAdapter" spec="2.10.3.2" />
+                <pod name="APDAdColonyAdapter" spec="2.11.1.1" />
+                <pod name="APDAmazonAdsAdapter" spec="2.11.1.1" />
+                <pod name="APDAppLovinAdapter" spec="2.11.1.1" />
+                <pod name="APDBidMachineAdapter" spec="2.11.1.1" />
+                <pod name="APDFacebookAudienceAdapter" spec="2.11.1.1" />
+                <pod name="APDGoogleAdMobAdapter" spec="2.11.1.1" />
+                <pod name="APDIronSourceAdapter" spec="2.11.1.2" />
+                <pod name="APDMyTargetAdapter" spec="2.11.1.1" />
+                <pod name="APDOguryAdapter" spec="2.11.1.1" />
+                <pod name="APDUnityAdapter" spec="2.11.1.1" />
+                <pod name="APDVungleAdapter" spec="2.11.1.1" />
+                <pod name="APDYandexAdapter" spec="2.11.1.1" />
             </pods>
         </podspec>
 
         <header-file src="src/ios/CDVAppodeal.h"/>
         <source-file src="src/ios/CDVAppodeal.m"/>
+        <header-file src="src/ios/NativeAdView.h"/>
+        <source-file src="src/ios/NativeAdView.m"/>
+        <resource-file src="src/ios/Native.xib"/>
+        
     </platform>
 </plugin>

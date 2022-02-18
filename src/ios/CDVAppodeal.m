@@ -11,6 +11,7 @@ static const int BANNER_BOTTOM       = 8;
 static const int BANNER_TOP          = 16;
 static const int REWARDED_VIDEO      = 128;
 static const int NON_SKIPPABLE_VIDEO = 256;
+static const int NATIVE              = 512;
 
 static const int BANNER_X_SMART  = 0;
 static const int BANNER_X_CENTER = 1;
@@ -27,7 +28,8 @@ static bool bannerIsShowing;
 static bool hasStatusBarPlugin = false;
 static bool isIphone;
 
-static APDBannerView* bannerView;
+static APDBannerView *bannerView;
+static UIView *nativeAdView;
 
 static NSString *CALLBACK_EVENT = @"event";
 static NSString *CALLBACK_INIT = @"onInit";
@@ -42,6 +44,13 @@ static bool isRewardedFinished = NO;
 static bool isNonSkippableFinished = NO;
 static bool isInterstitialPrecache = NO;
 static bool isBannerPrecache = NO;
+static bool isNativeAdLoaded = NO;
+
+struct NativeAdPlaceholder {
+    CGFloat x, y, w, h, tabMenuH;
+    bool isShowing;
+};
+static struct NativeAdPlaceholder nativeAdPlaceholder;
 
 static int nativeAdTypesForType(int adTypes) {
     int nativeAdTypes = 0;
@@ -64,6 +73,11 @@ static int nativeAdTypesForType(int adTypes) {
     if ((adTypes & NON_SKIPPABLE_VIDEO) >0) {
         nativeAdTypes |= AppodealAdTypeNonSkippableVideo;
     }
+    
+    if ((adTypes & NATIVE) > 0) {
+        nativeAdTypes |= AppodealAdTypeNativeAd;
+    }
+    
     return nativeAdTypes;
 }
 
@@ -108,16 +122,24 @@ static int nativeShowStyleForType(int adTypes) {
         bannerHeight = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 90.f : 50.f);
         isIphone = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? false : true);
     }
+    
     AppodealApiKey = [[command arguments] objectAtIndex:0];
+    
     if (STKConsentManager.sharedManager.consent != nil) {
         // using the StackConsentManager pod
-        //id<STKConsent> consent = STKConsentManager.sharedManager.consent;
         [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
             types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])
-            hasConsent:YES];
+            consentReport:STKConsentManager.sharedManager.consent];
+        /* [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
+            types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])
+            hasConsent:YES]; */
     } else {
         [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
             types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])];
+    }
+    
+    if ([[[command arguments] objectAtIndex:1] intValue] & NATIVE) {
+        [self initNativeQueueAndLoadAd];
     }
 }
 
@@ -175,11 +197,18 @@ static int nativeShowStyleForType(int adTypes) {
             [self changeWebViewWithOverlappedBanner];
     }
     CDVPluginResult* pluginResult = nil;
-    if([Appodeal showAd:nativeShowStyleForType((int)[[[command arguments] objectAtIndex:0] integerValue]) rootViewController:[[UIApplication sharedApplication] keyWindow].rootViewController]) {
+    if (([[[command arguments] objectAtIndex:0] intValue]) == NATIVE) {
+        [self presentNativeAd];
+        nativeAdPlaceholder.isShowing = YES;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
     } else {
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+        if ([Appodeal showAd:nativeShowStyleForType((int)[[[command arguments] objectAtIndex:0] integerValue]) rootViewController:[[UIApplication sharedApplication] keyWindow].rootViewController]) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+        }
     }
+
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -199,11 +228,16 @@ static int nativeShowStyleForType(int adTypes) {
         }
     }
     CDVPluginResult* pluginResult = nil;
-    if([Appodeal showAd:nativeShowStyleForType((int)[[[command arguments] objectAtIndex:0] intValue]) forPlacement:[[command arguments] objectAtIndex:1] rootViewController:[[UIApplication sharedApplication] keyWindow].rootViewController])
+    if (([[[command arguments] objectAtIndex:0] intValue]) == NATIVE) {
+        [self presentNativeAd];
+        nativeAdPlaceholder.isShowing = YES;
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
-    else
-        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
-    
+    } else {
+        if([Appodeal showAd:nativeShowStyleForType((int)[[[command arguments] objectAtIndex:0] intValue]) forPlacement:[[command arguments] objectAtIndex:1] rootViewController:[[UIApplication sharedApplication] keyWindow].rootViewController])
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+        else
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:NO];
+    }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
@@ -704,6 +738,15 @@ static int nativeShowStyleForType(int adTypes) {
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.nonSkippbaleCallbackID];
 }
 
+- (void) setNativeCallbacks:(CDVInvokedUrlCommand*)command {
+    //[Appodeal setNativeAdDelegate:self];
+    self.nativeCallbackID = command.callbackId;
+    NSDictionary *vals = @{CALLBACK_EVENT: CALLBACK_INIT};
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
+    [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.nativeCallbackID];
+}
+
 // banner view
 - (void)bannerViewDidLoadAd:(APDBannerView *)bannerView {
     isBannerPrecache = false;
@@ -736,6 +779,8 @@ static int nativeShowStyleForType(int adTypes) {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCallbackID];
+    
+    if (nativeAdPlaceholder.isShowing) { [self setNativeAdPosition:nil]; }
 }
 
 // banner
@@ -770,6 +815,8 @@ static int nativeShowStyleForType(int adTypes) {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.bannerCallbackID];
+    
+    if (nativeAdPlaceholder.isShowing) { [self setNativeAdPosition:nil]; }
 }
 
 // interstitial
@@ -892,6 +939,171 @@ static int nativeShowStyleForType(int adTypes) {
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:self.rewardedCallbackID];
+}
+
+// native ads
+- (void)initNativeQueueAndLoadAd {
+    NSLog(@"[appodeal debug] entered initNativeQueueAndLoadAd");
+    self.nativeAdQueue = [[APDNativeAdQueue alloc] init];
+    self.nativeAdQueue.settings.type = APDNativeAdTypeNoVideo;
+    self.nativeAdQueue.settings.adViewClass = NativeAdView.class;
+    self.nativeAdQueue.settings.autocacheMask = APDNativeResourceAutocacheIcon;
+    self.nativeAdQueue.delegate = self;
+    
+    [self.nativeAdQueue loadAd];
+}
+
+- (void)presentNativeAd {
+    NSLog(@"[appodeal debug] entered presentNativeAd");
+    self.nativeAd = [[self.nativeAdQueue getNativeAdsOfCount:1] firstObject];
+    self.nativeAd.delegate = self;
+    
+    UIViewController *rootViewController = [self topViewController];
+    nativeAdView = [self.nativeAd getAdViewForController:rootViewController];
+    [rootViewController.view addSubview:nativeAdView];
+    [rootViewController.view bringSubviewToFront:nativeAdView];
+    
+    NSLog(@"[appodeal] creating nativeAd frame");
+    CGFloat adHeight    = 100.0f;
+    CGFloat adWidth     = rootViewController.view.frame.size.width;
+    CGRect adRect = CGRectMake(.0f, nativeAdPlaceholder.y, adWidth, adHeight);
+    [nativeAdView setFrame:adRect];
+    nativeAdView.layer.masksToBounds = YES;
+    nativeAdView.layer.cornerRadius = 8.0;
+    nativeAdView.layer.backgroundColor = [UIColor lightGrayColor].CGColor;
+    [nativeAdView layoutSubviews];
+}
+
+- (void) nativeAdDidLoad {
+    if (!isNativeAdLoaded) {
+        isNativeAdLoaded = YES;
+        NSDictionary *vals = @{CALLBACK_EVENT: CALLBACK_LOADED};
+        CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.nativeCallbackID];
+    }
+}
+
+- (void)adQueueAdIsAvailable:(APDNativeAdQueue *)adQueue ofCount:(NSUInteger)count {
+    NSLog(@"[appodeal debug] entered adQueueAdIsAvailable");
+    [self nativeAdDidLoad];
+}
+
+- (void)adQueue:(APDNativeAdQueue *)adQueue failedWithError:(NSError *)error {
+    NSLog(@"[appodeal debug] entered failedWithError");
+}
+
+- (void)nativeAdWillLogImpression:(APDNativeAd *)nativeAd {
+    NSDictionary *vals = @{CALLBACK_EVENT: CALLBACK_SHOWN};
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:vals];
+    [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:self.nativeCallbackID];
+}
+
+- (void)nativeAdWillLogUserInteraction:(APDNativeAd *)nativeAd {
+    NSLog(@"[appodeal debug] entered nativeAdWillLogUserInteraction");
+}
+
+- (void) setNativeAdPosition:(CDVInvokedUrlCommand*)command {
+    CGFloat x, y, w, h, tabH;
+    
+    if (command != nil) {
+        x = [[[command arguments] objectAtIndex:0] floatValue];
+        y = [[[command arguments] objectAtIndex:1] floatValue];
+        w = [[[command arguments] objectAtIndex:2] floatValue];
+        h = [[[command arguments] objectAtIndex:3] floatValue];
+        tabH = [[[command arguments] objectAtIndex:4] floatValue];
+    } else {
+        x = nativeAdPlaceholder.x;
+        y = nativeAdPlaceholder.y;
+        w = nativeAdPlaceholder.w;
+        h = nativeAdPlaceholder.h;
+        tabH = nativeAdPlaceholder.tabMenuH;
+    }
+
+    //NSLog(@"[appodeal debug] setNativeAdPosition X=%f, Y=%f, W=%f, H=%f, tabH=%f", x,y,w,h,tabH);
+    
+    float adInitialHeight = 100.f;
+    float headerH = 62.f; // TODO dangerous having it fixed because it can break on other phone models...
+    
+    if (bannerIsShowing) {
+        if (hasStatusBarPlugin) {
+            statusBarHeight = 20.f;
+        } else {
+            if (isIphone && UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
+                statusBarHeight = 0.f;
+            } else {
+                statusBarHeight = 20.f;
+            }
+        }
+        float extraPadding = 0.f;
+        if ([self isiPhoneX]) {
+            extraPadding = 35.f;
+        }
+        headerH += bannerHeight;
+        y += bannerHeight + statusBarHeight + extraPadding;
+    }
+    float yOffset = 14.f;
+    y -= yOffset;
+
+    h = nativeAdView.frame.size.height;
+    if (y <= headerH) {
+        float heightDelta = headerH - y;
+        h = adInitialHeight - heightDelta;
+        if (h < 0) { h = 0.f; }
+        y = headerH;
+    } else {
+        float contentH = nativeAdView.superview.frame.size.height;
+        float bottomOfAd = y + adInitialHeight;
+        float tabMenuTop = contentH - tabH;
+        if (bottomOfAd >= tabMenuTop) {
+            h = tabMenuTop - y;
+            if (h < 0) { h = 0.f; }
+        } else {
+            h = adInitialHeight;
+        }
+    }
+
+    nativeAdPlaceholder.x = x;
+    nativeAdPlaceholder.y = y;
+    nativeAdPlaceholder.w = w;
+    nativeAdPlaceholder.h = h;
+    nativeAdPlaceholder.tabMenuH = tabH;
+
+    nativeAdView.frame = CGRectMake(x, y, nativeAdView.frame.size.width, h);
+    [nativeAdView layoutSubviews];
+}
+
+- (void) hideNativeAd:(CDVInvokedUrlCommand*)command {
+    bool isHidden = true;
+    if (nativeAdPlaceholder.isShowing) {
+        isHidden = false;
+        if (nativeAdView) {
+            isHidden = true;
+            [nativeAdView setHidden:isHidden];
+            nativeAdPlaceholder.isShowing = !isHidden;
+        }
+    }
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:isHidden];
+    NSLog(@"[appodeal debug] hideNativeAd returning %@", pluginResult.message);
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void) revealHiddenNativeAd:(CDVInvokedUrlCommand*)command {
+    bool isShowing = true;
+    if (!nativeAdPlaceholder.isShowing) {
+        isShowing = false;
+        if (nativeAdView) {
+            isShowing = true;
+            [nativeAdView setHidden:NO];
+            nativeAdPlaceholder.isShowing = true;
+            
+            [self setNativeAdPosition:nil];
+        }
+    }
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:isShowing];
+    NSLog(@"[appodeal debug] revealHiddenNativeAd returning %@", [pluginResult message]);
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 #pragma mark - STKConsentManagerDisplayDelegate

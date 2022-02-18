@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment version="2304" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="iN0-l3-epB" customClass="NativeAdView">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="100"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLi-4R-bDh">
+                    <rect key="frame" x="86" y="32" width="294" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="5dM-ki-T4u"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="desc">
+                            <attributes>
+                                <color key="NSColor" red="0.039352692660000001" green="0.043456502260000002" blue="0.046806462110000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" metaFont="system" size="14"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iR6-PG-XdG">
+                    <rect key="frame" x="86" y="12" width="258" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="E9P-lm-pSB"/>
+                    </constraints>
+                    <attributedString key="attributedText">
+                        <fragment content="title">
+                            <attributes>
+                                <color key="NSColor" red="0.039352692660000001" green="0.043456502260000002" blue="0.046806462110000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" metaFont="system" size="16"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="ug7-8P-s42">
+                    <rect key="frame" x="3" y="11" width="75" height="75"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="75" id="1ZZ-ky-3VG"/>
+                        <constraint firstAttribute="height" constant="75" id="IPz-Gc-Bgz"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="30" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uFv-Oj-4qk">
+                    <rect key="frame" x="275" y="65" width="120" height="30"/>
+                    <color key="tintColor" systemColor="tintColor"/>
+                    <attributedString key="attributedText">
+                        <fragment content="cta">
+                            <attributes>
+                                <color key="NSColor" red="0.039352692660000001" green="0.043456502260000002" blue="0.046806462110000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <font key="NSFont" metaFont="system" size="15"/>
+                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                            </attributes>
+                        </fragment>
+                    </attributedString>
+                    <color key="highlightedColor" red="0.039352692660000001" green="0.043456502260000002" blue="0.046806462110000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </label>
+                <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="0aq-Ka-m4t">
+                    <rect key="frame" x="364" y="4" width="30" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ad" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jHc-4Y-Tag">
+                            <rect key="frame" x="14" y="17" width="16" height="15"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="OjX-Gx-b64"/>
+                        <constraint firstAttribute="height" constant="30" id="vXT-Ot-2M4"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="ug7-8P-s42" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="9gJ-1M-brG"/>
+                <constraint firstItem="0aq-Ka-m4t" firstAttribute="leading" secondItem="iR6-PG-XdG" secondAttribute="trailing" constant="10" id="Dk0-N5-H46"/>
+                <constraint firstAttribute="trailing" secondItem="LLi-4R-bDh" secondAttribute="trailing" constant="20" id="Fe8-eE-6GJ"/>
+                <constraint firstItem="ug7-8P-s42" firstAttribute="top" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="Fgt-AE-i9J"/>
+                <constraint firstAttribute="bottom" secondItem="uFv-Oj-4qk" secondAttribute="bottom" constant="5" id="OuL-Sa-9pJ"/>
+                <constraint firstItem="LLi-4R-bDh" firstAttribute="top" secondItem="iR6-PG-XdG" secondAttribute="bottom" constant="5" id="QGn-Py-qxI"/>
+                <constraint firstAttribute="trailing" secondItem="uFv-Oj-4qk" secondAttribute="trailing" constant="5" id="a9C-aO-Vxq"/>
+                <constraint firstItem="uFv-Oj-4qk" firstAttribute="top" secondItem="LLi-4R-bDh" secondAttribute="bottom" constant="1" id="fn6-Dw-GTU"/>
+                <constraint firstItem="LLi-4R-bDh" firstAttribute="leading" secondItem="ug7-8P-s42" secondAttribute="trailing" constant="20" id="qkw-G1-aVg"/>
+                <constraint firstItem="iR6-PG-XdG" firstAttribute="leading" secondItem="ug7-8P-s42" secondAttribute="trailing" constant="20" id="xII-Lb-pk4"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="adChoicesView" destination="0aq-Ka-m4t" id="WGl-BV-XDd"/>
+                <outlet property="callToActionLabel" destination="uFv-Oj-4qk" id="LkX-63-QuB"/>
+                <outlet property="descriptionLabel" destination="LLi-4R-bDh" id="1j8-Df-5K7"/>
+                <outlet property="iconView" destination="ug7-8P-s42" id="uJF-hn-ZWy"/>
+                <outlet property="titleLabel" destination="iR6-PG-XdG" id="tDK-KJ-QYK"/>
+            </connections>
+            <point key="canvasLocation" x="-104" y="-331.93403298350825"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="tintColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

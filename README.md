@@ -78,17 +78,14 @@ Appodeal.show(Appodeal.NATIVE, function(result){
 
 ## notes about Native Ad:
 
-On Android, the Native Ad is created on a dedicated View object using the specific Appodeal template `NativeAdViewNewsFeed`.<br>
-This View is drawn separated from the Cordova webview (as all other ad types), but can be positioned via the `setNativeAdPosition()` method (values for top/left/bottom/right must be provided, along with a 'tab height' value to define height boundaries).<br>
 From inside the cordova/ionic app, the `setNativeAdPosition()` method can be hooked to the `onScroll` event of the desired content area, to make the NativeAd View get repositioned following scroll events.<br>
-The final result is not perfect (also requires special controls from the javascript side), but works and allows Ionic/Cordova apps to show NativeAds from Appodeal.
-
-TODO: iOS implementation.
-
+The final result is not perfect (also requires special controls from the javascript side), but works and allows Ionic/Cordova apps to show NativeAds from Appodeal.<br>
+On Android, the Native Ad is created on a dedicated View object using the specific Appodeal template `NativeAdViewNewsFeed`. This View is drawn separated from the Cordova webview (as all other ad types), but can be positioned via the `setNativeAdPosition()` method (values for top/left/bottom/right must be provided, along with a 'tab height' value to define height boundaries).<br>
+On iOS, the Native Ad is created on its own NIB (Native.xib). The loading is done automatically, and it will appear on screen upon a call to Appodeal.show(). The ad position can be changed via `setNativeAdPosition()` method.<br>
 <hr />
 
 appodeal SDK versions:<br>
-iOS: 2.10.3 (must use XCode 13+)<br>
+iOS: 2.11.1 (must use XCode 13+)<br>
 android: 2.11.0
 
 stack consent SDK versions:<br>
