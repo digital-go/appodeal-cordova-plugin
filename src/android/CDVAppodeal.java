@@ -1566,6 +1566,7 @@ public class CDVAppodeal extends CordovaPlugin {
                 List<NativeAd> nativeAds = Appodeal.getNativeAds(1);
                 nativeAdView = new NativeAdViewNewsFeed(cordova.getActivity(), nativeAds.get(0));
                 nativeAdView.setId(NATIVE_AD_ID);
+                nativeAdView.setBackgroundColor(Color.LTGRAY);
                 nativeAdView.setCallToActionColor("black");
                 List<TextView> list = getAllChildTextViews(nativeAdView);
                 for (TextView v : list) {
@@ -1595,10 +1596,19 @@ public class CDVAppodeal extends CordovaPlugin {
 
         while(!toVisit.isEmpty()) {
             View child = toVisit.remove(0);
-            if (child instanceof TextView) visited.add((TextView)child);
+            if (child instanceof TextView) {
+                CharSequence text = ((TextView)child).getText();
+                if (text != null) {
+                    if (text.toString().trim().equals("Ad") || text.toString().trim().equals("Sponsored")) {
+                        View parent = (View) child.getParent();
+                        parent.setX(parent.getX() - 30); // shift the "Ad" box to the left
+                    }
+                }
+                visited.add((TextView)child);
+            }
             if (child instanceof RatingBar) {
                 android.graphics.drawable.Drawable stars = ((RatingBar) child).getProgressDrawable();
-                stars.setColorFilter(Color.parseColor("#FFCC00"), android.graphics.PorterDuff.Mode.SRC_ATOP);
+                stars.setColorFilter(Color.parseColor("#FFA500"), android.graphics.PorterDuff.Mode.SRC_ATOP);
             }
             if (!(child instanceof ViewGroup)) continue;
             ViewGroup group = (ViewGroup) child;
