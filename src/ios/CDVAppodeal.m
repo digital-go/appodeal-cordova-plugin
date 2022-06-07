@@ -2,8 +2,10 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 #import <StackConsentManager/StackConsentManager.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 static NSString *AppodealApiKey;
+static CDVInvokedUrlCommand *globalInvokedCmd = nil;
 
 static const int INTERSTITIAL        = 3;
 static const int BANNER              = 4;
@@ -130,12 +132,11 @@ static int nativeShowStyleForType(int adTypes) {
         [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
             types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])
             consentReport:STKConsentManager.sharedManager.consent];
-        /* [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
-            types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])
-            hasConsent:YES]; */
     } else {
         [Appodeal initializeWithApiKey:[[command arguments] objectAtIndex:0]
-            types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])];
+            types:nativeAdTypesForType([[[command arguments] objectAtIndex:1] intValue])
+            hasConsent:[[[command arguments] objectAtIndex:2] boolValue]
+        ];
     }
     
     if ([[[command arguments] objectAtIndex:1] intValue] & NATIVE) {
@@ -145,6 +146,7 @@ static int nativeShowStyleForType(int adTypes) {
 
 - (void) manageConsent:(CDVInvokedUrlCommand*)command
 {
+    globalInvokedCmd = command;
     AppodealApiKey = [[command arguments] objectAtIndex:0];
     [self synchroniseConsent:command];
 }
@@ -160,7 +162,7 @@ static int nativeShowStyleForType(int adTypes) {
         
         if (STKConsentManager.sharedManager.shouldShowConsentDialog != STKConsentBoolTrue) {
             [strongSelf initialize:command];
-            return ;
+            return;
         }
         
         [STKConsentManager.sharedManager loadConsentDialog:^(NSError *error) {
@@ -170,9 +172,11 @@ static int nativeShowStyleForType(int adTypes) {
             
             if (!STKConsentManager.sharedManager.isConsentDialogReady) {
                 [strongSelf initialize:command];
-                return ;
+                return;
             }
+   
             UIViewController *rootViewController = [self topViewControllerWithRootViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
+
             [STKConsentManager.sharedManager showConsentDialogFromRootViewController:rootViewController delegate:strongSelf];
         }];
     }];
@@ -1111,17 +1115,41 @@ static int nativeShowStyleForType(int adTypes) {
 - (void)consentManagerWillShowDialog:(STKConsentManager *)consentManager {}
 
 - (void)consentManagerDidDismissDialog:(STKConsentManager *)consentManager {
-    AppodealAdType adTypes = AppodealAdTypeBanner | AppodealAdTypeInterstitial | AppodealAdTypeRewardedVideo;
-    [Appodeal initializeWithApiKey:AppodealApiKey
-        types:adTypes
-        hasConsent:YES];
+    __block bool consentResult = NO;
+    
+    if (@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            if (status == ATTrackingManagerAuthorizationStatusDenied) {
+                NSLog(@"ATTrackingManagerAuthorizationStatusDenied");
+            } else if (status == ATTrackingManagerAuthorizationStatusAuthorized) {
+                NSLog(@"ATTrackingManagerAuthorizationStatusAuthorized");
+                consentResult = YES;
+            } else if (status == ATTrackingManagerAuthorizationStatusRestricted) {
+                NSLog(@"ATTrackingManagerAuthorizationStatusRestricted");
+            } else if (status == ATTrackingManagerAuthorizationStatusNotDetermined) {
+                NSLog(@"ATTrackingManagerAuthorizationStatusNotDetermined");
+            }
+        }];
+    } else {
+        consentResult = YES;
+    }
+
+    NSMutableArray *args = [NSMutableArray new];
+    [args addObject:[[globalInvokedCmd arguments] objectAtIndex:0]]; //api key
+    [args addObject:[[globalInvokedCmd arguments] objectAtIndex:1]]; //ad types
+    [args addObject:@(consentResult)]; //consent
+    
+    //initialize rewriting command using new arguments
+    [self initialize:
+        [globalInvokedCmd initWithArguments:args
+        callbackId:[globalInvokedCmd callbackId]
+        className:[globalInvokedCmd className]
+        methodName:[globalInvokedCmd methodName]]
+    ];
 }
 
 - (void)consentManager:(STKConsentManager *)consentManager didFailToPresent:(NSError *)error {
-    AppodealAdType adTypes = AppodealAdTypeBanner | AppodealAdTypeInterstitial | AppodealAdTypeRewardedVideo;
-    [Appodeal initializeWithApiKey:AppodealApiKey
-        types:adTypes
-        hasConsent:YES];
+    [self initialize:globalInvokedCmd];
 }
 
 @end
