@@ -85,9 +85,9 @@ On iOS, the Native Ad is created on its own NIB (Native.xib). The loading is don
 <hr />
 
 appodeal SDK versions:<br>
-iOS: 2.11.1 (must use XCode 13+)<br>
+iOS: 3.0.2 (must use XCode 14+, with Rosetta when on an Apple silicon processor)<br>
 android: 2.11.0
 
 stack consent SDK versions:<br>
-iOS: 1.1.2<br>
+iOS: included<br>
 android: 1.0.5
